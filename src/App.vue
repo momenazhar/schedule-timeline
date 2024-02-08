@@ -4,9 +4,6 @@
       <div class="filler">SPRING 2024</div>
       <div class="days">
         <div class="day" v-for="(day, index) in schedule.days" :key="index">{{ day }}</div>
-        <div class="day-lines">
-          <div class="day-line" v-for="index in 5" :key="index" />
-        </div>
       </div>
     </div>
     <div class="right">
@@ -25,6 +22,7 @@
         <div class="horizontal-lines">
           <div class="horizontal-line" v-for="index in 5" :key="index" />
         </div>
+        <div class="class" />
       </div>
     </div>
   </div>
@@ -114,7 +112,6 @@ export default {
 
 .times {
   position: relative;
-
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -199,28 +196,18 @@ export default {
 }
 
 .day:first-child {
-  border-radius: var(--border-radius) var(--border-radius) 0px 0px;
+  border-radius: calc(var(--border-radius) - 2px) calc(var(--border-radius) - 2px) 0px 0px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.day:not(:first-child):not(:last-child) {
+  border-bottom: 1px solid var(--stroke);
+  border-top: 1px solid var(--stroke);
 }
 
 .day:last-child {
-  border-radius: 0px 0px var(--border-radius) var(--border-radius);
-}
-
-.day-lines {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  top: 67px;
-  gap: var(--vertical-gap);
-  width: 100%;
-}
-
-.day-line {
-  width: 100%;
-  height: var(--line-thickness);
-  background-color: rgb(226, 226, 226, 0.62);
+  border-radius: 0px 0px calc(var(--border-radius) - 2px) calc(var(--border-radius) - 2px);
+  border-top: 1px solid var(--stroke);
 }
 
 .filler {
@@ -256,7 +243,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--vertical-gap);
+  gap: calc(var(--vertical-gap) - 2px);
   width: 100%;
 }
 
@@ -264,5 +251,14 @@ export default {
   width: 100%;
   height: var(--line-thickness);
   background-color: var(--grid-color-primary);
+}
+
+.class {
+  position: absolute;
+  height: var(--vertical-gap);
+  width: 100%;
+  background-color: rgba(143, 182, 255, 0.623);
+  top: 0;
+  left: 0;
 }
 </style>
