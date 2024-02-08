@@ -37,6 +37,8 @@
                 }"
               >
                 {{ day.name }}
+                <div class="section">{{ day.section }}</div>
+                <div class="info">SAT {{ day.start }} - {{ day.end }} | {{ day.location }}</div>
               </div>
             </div>
           </div>
@@ -51,10 +53,13 @@
                   class="classbox"
                   :style="{
                     left: calculateLeft(day.start),
-                    width: calculateWidth(day.end, day.start)
+                    width: calculateWidth(day.end, day.start),
+                    ...setRandomColor()
                   }"
                 >
                   {{ day.name }}
+                  <div class="section">{{ day.section }}</div>
+                  <div class="info">SUN {{ day.start }} - {{ day.end }} | {{ day.location }}</div>
                 </div>
               </div>
             </div>
@@ -70,10 +75,13 @@
                   class="classbox"
                   :style="{
                     left: calculateLeft(day.start),
-                    width: calculateWidth(day.end, day.start)
+                    width: calculateWidth(day.end, day.start),
+                    ...setRandomColor()
                   }"
                 >
                   {{ day.name }}
+                  <div class="section">{{ day.section }}</div>
+                  <div class="info">MON {{ day.start }} - {{ day.end }} | {{ day.location }}</div>
                 </div>
               </div>
             </div>
@@ -89,10 +97,13 @@
                   class="classbox"
                   :style="{
                     left: calculateLeft(day.start),
-                    width: calculateWidth(day.end, day.start)
+                    width: calculateWidth(day.end, day.start),
+                    ...setRandomColor()
                   }"
                 >
                   {{ day.name }}
+                  <div class="section">{{ day.section }}</div>
+                  <div class="info">TUE {{ day.start }} - {{ day.end }} | {{ day.location }}</div>
                 </div>
               </div>
             </div>
@@ -108,10 +119,13 @@
                   class="classbox"
                   :style="{
                     left: calculateLeft(day.start),
-                    width: calculateWidth(day.end, day.start)
+                    width: calculateWidth(day.end, day.start),
+                    ...setRandomColor()
                   }"
                 >
                   {{ day.name }}
+                  <div class="section">{{ day.section }}</div>
+                  <div class="info">WED {{ day.start }} - {{ day.end }} | {{ day.location }}</div>
                 </div>
               </div>
             </div>
@@ -127,10 +141,13 @@
                   class="classbox"
                   :style="{
                     left: calculateLeft(day.start),
-                    width: calculateWidth(day.end, day.start)
+                    width: calculateWidth(day.end, day.start),
+                    ...setRandomColor()
                   }"
                 >
                   {{ day.name }}
+                  <div class="section">{{ day.section }}</div>
+                  <div class="info">THU {{ day.start }} - {{ day.end }} | {{ day.location }}</div>
                 </div>
               </div>
             </div>
@@ -159,21 +176,24 @@ export default {
               name: 'Operating Systems',
               start: '08:00',
               end: '09:30',
-              location: 'B-B01'
+              location: 'B-B01',
+              section: 'T1'
             },
             {
               name: 'OOP',
               start: '12:00',
               end: '14:00',
-              location: 'B-B01'
+              location: 'B-B01',
+              section: 'T2'
             }
           ],
           tue: [
             {
-              name: 'Operating Systems',
+              name: 'Management of Medically Compromised Patients',
               start: '08:00',
               end: '10:00',
-              location: 'B-B01'
+              location: 'B-B01',
+              section: 'L1'
             }
           ]
         },
@@ -220,11 +240,6 @@ export default {
     calculateWidth(endTime, startTime) {
       const timeIndexStart = this.schedule.timeline.indexOf(startTime)
       const timeIndexEnd = this.schedule.timeline.indexOf(endTime)
-      const numLines = this.schedule.timeline.length
-      const horizontalGap = parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue('--horizontal-gap')
-      )
-      const totalGap = (numLines - 1) * horizontalGap // Total gap between lines
 
       if (timeIndexStart !== -1 && timeIndexEnd !== -1) {
         // Calculate the total width available between the start and end times
@@ -234,6 +249,21 @@ export default {
       }
 
       return '0px' // Default value
+    },
+    // Function to generate a random rgba color code with 50% opacity
+    getRandomColor() {
+      const randomColor = Math.floor(Math.random() * 16777215).toString(16)
+      return '#' + randomColor
+    },
+
+    // Function to set both background and border color using the same random color
+    setRandomColor() {
+      const randomColor = this.getRandomColor()
+      return {
+        background: `linear-gradient(90deg, rgba(${parseInt(randomColor.slice(-6, -4), 16)}, ${parseInt(randomColor.slice(-4, -2), 16)}, ${parseInt(randomColor.slice(-2), 16)}, 0.30) 0%, rgba(${parseInt(randomColor.slice(-6, -4), 16)}, ${parseInt(randomColor.slice(-4, -2), 16)}, ${parseInt(randomColor.slice(-2), 16)}, 0.25) 10%)`,
+        borderColor: randomColor,
+        color: randomColor
+      }
     }
   }
 }
@@ -242,7 +272,7 @@ export default {
 <style>
 :root {
   --horizontal-gap: 1rem; /* Adjust the gap between the vertical lines and the times (Width of the grid) */
-  --vertical-gap: 4.5rem; /* Adjust the gap between the horizontal lines and the height of each day component (Height of the grid) */
+  --vertical-gap: 5rem; /* Adjust the gap between the horizontal lines and the height of each day component (Height of the grid) */
   --components-gap: 1rem; /* Adjust the gap between each separated element (Semester Box, Times Box, Days Box, Grid Box) */
   --grid-gap: 2rem; /* Adjust the inline padding of the times and the vertical lines (Preferred to not change) */
   --top-height: 3rem; /* Adjust the height of the top components (Semester Box and Times Box) */
@@ -453,7 +483,33 @@ export default {
 
 .classbox {
   position: absolute;
-  background-color: gray;
-  height: 80%;
+  height: 90%;
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(3px);
+  border-left: 4px solid;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.section {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2rem;
+  text-align: center;
+  background: inherit;
+  font-size: 16px;
+  padding: 6px;
+  border-radius: 0 0 0 var(--border-radius);
+}
+
+.info {
+  position: absolute;
+  color: white;
+  font-weight: 500;
+  font-size: 10px;
+  bottom: 10px;
 }
 </style>
