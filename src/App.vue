@@ -22,17 +22,161 @@
         <div class="horizontal-lines">
           <div class="horizontal-line" v-for="index in 5" :key="index" />
         </div>
-        <div class="class" />
+        <div class="classes-container">
+          <div class="class sat">
+            <div
+              v-if="shouldRenderBox('sat')"
+              v-for="(day, index) in schedule.classes.sat"
+              :key="index"
+            >
+              <div
+                class="classbox"
+                :style="{
+                  left: calculateLeft(day.start),
+                  width: calculateWidth(day.end, day.start)
+                }"
+              >
+                {{ day.name }}
+              </div>
+            </div>
+          </div>
+          <div class="class sun">
+            <div
+              v-if="shouldRenderBox('sun')"
+              v-for="(day, index) in schedule.classes.sun"
+              :key="index"
+            >
+              <div class="box">
+                <div
+                  class="classbox"
+                  :style="{
+                    left: calculateLeft(day.start),
+                    width: calculateWidth(day.end, day.start)
+                  }"
+                >
+                  {{ day.name }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="class mon">
+            <div
+              v-if="shouldRenderBox('mon')"
+              v-for="(day, index) in schedule.classes.mon"
+              :key="index"
+            >
+              <div class="box">
+                <div
+                  class="classbox"
+                  :style="{
+                    left: calculateLeft(day.start),
+                    width: calculateWidth(day.end, day.start)
+                  }"
+                >
+                  {{ day.name }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="class tue">
+            <div
+              v-if="shouldRenderBox('tue')"
+              v-for="(day, index) in schedule.classes.tue"
+              :key="index"
+            >
+              <div class="box">
+                <div
+                  class="classbox"
+                  :style="{
+                    left: calculateLeft(day.start),
+                    width: calculateWidth(day.end, day.start)
+                  }"
+                >
+                  {{ day.name }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="class wed">
+            <div
+              v-if="shouldRenderBox('wed')"
+              v-for="(day, index) in schedule.classes.wed"
+              :key="index"
+            >
+              <div class="box">
+                <div
+                  class="classbox"
+                  :style="{
+                    left: calculateLeft(day.start),
+                    width: calculateWidth(day.end, day.start)
+                  }"
+                >
+                  {{ day.name }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="class thu">
+            <div
+              v-if="shouldRenderBox('thu')"
+              v-for="(day, index) in schedule.classes.thu"
+              :key="index"
+            >
+              <div class="box">
+                <div
+                  class="classbox"
+                  :style="{
+                    left: calculateLeft(day.start),
+                    width: calculateWidth(day.end, day.start)
+                  }"
+                >
+                  {{ day.name }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+// !!!!! Weird calculations here to calculate padding
+const gridGap =
+  (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--grid-gap')) +
+    parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--horizontal-gap'))) *
+    16 +
+  5.8
+
 export default {
   data() {
     return {
       schedule: {
+        classes: {
+          sun: [
+            {
+              name: 'Operating Systems',
+              start: '08:00',
+              end: '09:30',
+              location: 'B-B01'
+            },
+            {
+              name: 'OOP',
+              start: '12:00',
+              end: '14:00',
+              location: 'B-B01'
+            }
+          ],
+          tue: [
+            {
+              name: 'Operating Systems',
+              start: '08:00',
+              end: '10:00',
+              location: 'B-B01'
+            }
+          ]
+        },
         timeline: [
           '08:00',
           '08:30',
@@ -44,20 +188,52 @@ export default {
           '11:30',
           '12:00',
           '12:30',
-          '01:00',
-          '01:30',
-          '02:00',
-          '02:30',
-          '03:00',
-          '03:30',
-          '04:00',
-          '04:30',
-          '05:00',
-          '05:30',
-          '06:00'
+          '13:00',
+          '13:30',
+          '14:00',
+          '14:30',
+          '15:00',
+          '15:30',
+          '16:00',
+          '16:30',
+          '17:00',
+          '17:30',
+          '18:00'
         ],
         days: ['SATURDAY', 'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY']
       }
+    }
+  },
+  methods: {
+    shouldRenderBox(day) {
+      // Check if there are any classes for the specified day
+      return this.schedule.classes.hasOwnProperty(day) && this.schedule.classes[day].length > 0
+    },
+    calculateLeft(startTime) {
+      // Calculate the left position based on the start time
+      const timeIndex = this.schedule.timeline.indexOf(startTime)
+      if (timeIndex !== -1) {
+        return `${timeIndex * 57.7 + gridGap}px`
+      }
+      return '0px' // Default value
+    },
+    calculateWidth(endTime, startTime) {
+      const timeIndexStart = this.schedule.timeline.indexOf(startTime)
+      const timeIndexEnd = this.schedule.timeline.indexOf(endTime)
+      const numLines = this.schedule.timeline.length
+      const horizontalGap = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--horizontal-gap')
+      )
+      const totalGap = (numLines - 1) * horizontalGap // Total gap between lines
+
+      if (timeIndexStart !== -1 && timeIndexEnd !== -1) {
+        // Calculate the total width available between the start and end times
+        const totalWidth = (timeIndexEnd - timeIndexStart) * 57.7 - 2 // Adjusted width considering the gap
+
+        return `${totalWidth}px`
+      }
+
+      return '0px' // Default value
     }
   }
 }
@@ -223,7 +399,6 @@ export default {
 }
 
 .grid-container {
-  background: red;
   height: 100%;
 }
 
@@ -253,12 +428,32 @@ export default {
   background-color: var(--grid-color-primary);
 }
 
-.class {
+.classes-container {
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: calc(var(--border-radius) - 2px);
+  height: 100%;
+  width: 100%;
+}
+
+.class {
+  position: relative;
+  display: flex;
   height: var(--vertical-gap);
   width: 100%;
-  background-color: rgba(143, 182, 255, 0.623);
-  top: 0;
-  left: 0;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.classbox {
+  position: absolute;
+  background-color: gray;
+  height: 80%;
 }
 </style>
